@@ -9,7 +9,7 @@ edition = "2021"
 trade-log-core = { path = "../trade-log-core" }
 trade-log-macros = { path = "../trade-log-macros" }
 trade-log-contracts = { path = "../trade-log-contracts" }
-service-sdk = { tag = "0.2.3", git = "https://github.com/MyJetTools/service-sdk.git" }
+service-sdk = { tag = "0.2.4", git = "https://github.com/MyJetTools/service-sdk.git" }
 tokio = "*"
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
