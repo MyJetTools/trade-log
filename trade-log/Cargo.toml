@@ -10,6 +10,6 @@ trade-log-core = { path = "../trade-log-core" }
 trade-log-macros = { path = "../trade-log-macros" }
 trade-log-contracts = { path = "../trade-log-contracts" }
 service-sdk = { tag = "0.2.5", git = "https://github.com/MyJetTools/service-sdk.git" }
-tokio = {version = "*", features = ["full"] }
+tokio = { version = "*", features = ["full"] }
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
