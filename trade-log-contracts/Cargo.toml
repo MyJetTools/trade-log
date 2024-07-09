@@ -10,5 +10,5 @@ service-sdk = { tag = "0.2.5", git = "https://github.com/MyJetTools/service-sdk.
     "my-service-bus",
     "macros",
 ] }
-prost = "0.12"
-prost-types = "0.12"
+prost = "*"
+prost-types = "*"
