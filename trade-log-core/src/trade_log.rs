@@ -1,13 +1,13 @@
 use std::{collections::HashMap, sync::Arc, time::Duration};
 
-use service_sdk::{
-    my_logger::{self, LogEventCtx},
-    my_service_bus::{abstractions::publisher::MyServiceBusPublisher, client::MyServiceBusClient},
-    my_telemetry::MyTelemetryContext,
-    rust_extensions::{date_time::DateTimeAsMicroseconds, StrOrString},
-};
 use tokio::sync::Mutex;
 use trade_log_contracts::{TradeLogSbModel, TradeLogSbModelDataItem};
+use yft_service_sdk::external::{
+    my_service_bus_sdk::{
+        abstractions::publisher::MyServiceBusPublisher, client::MyServiceBusClient,
+    },
+    yft_rust_extensions::chrono::Utc,
+};
 
 use crate::{ModelToDeliver, TradeLogInner};
 
@@ -61,12 +61,11 @@ impl TradeLog {
 
     pub async fn write<'s>(
         &self,
-        trader_id: impl Into<StrOrString<'s>>,
-        account_id: impl Into<StrOrString<'s>>,
-        process_id: Option<impl Into<StrOrString<'s>>>,
-        operation_id: impl Into<StrOrString<'s>>,
-        message: impl Into<StrOrString<'s>>,
-        my_telemetry: Option<MyTelemetryContext>,
+        trader_id: impl Into<String>,
+        account_id: impl Into<String>,
+        process_id: Option<impl Into<String>>,
+        operation_id: impl Into<String>,
+        message: impl Into<String>,
         data: Option<HashMap<String, String>>,
     ) {
         let mut write_access = self.context.lock().await;
@@ -100,10 +99,10 @@ impl TradeLog {
                 vec![]
             },
             component: component_name,
-            date_time_unix_micros: DateTimeAsMicroseconds::now().unix_microseconds,
+            date_time_unix_micros: Utc::now().timestamp_micros(),
         };
 
-        write_access.inner.add(item, my_telemetry);
+        write_access.inner.add(item);
     }
 
     pub async fn stop(&self) {
@@ -171,15 +170,9 @@ async fn deliver_it(
     publisher: Arc<MyServiceBusPublisher<TradeLogSbModel>>,
 ) {
     loop {
-        match publisher
-            .publish_messages(to_write.iter().map(|itm| {
-                return match &itm.my_telemetry {
-                    Some(src) => (&itm.model, Some(src)),
-                    None => (&itm.model, None),
-                };
-            }))
-            .await
-        {
+        let models = to_write.iter().map(|x| x.model.clone()).collect::<Vec<_>>();
+
+        match publisher.publish_messages(&models).await {
             Ok(_) => {
                 let mut write_access = inner.lock().await;
                 write_access.inner.delivered();
@@ -196,12 +189,6 @@ async fn deliver_it(
                         break;
                     }
                 }
-
-                my_logger::LOGGER.write_error(
-                    "Publish TradeLog to Sb".to_string(),
-                    format!("{:?}", err),
-                    LogEventCtx::new().add("accountIds", account_ids),
-                );
 
                 tokio::time::sleep(Duration::from_secs(1)).await;
             }

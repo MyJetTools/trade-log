@@ -1,16 +1,12 @@
 use std::sync::Arc;
 
-use service_sdk::{
-    my_service_bus::abstractions::publisher::MyServiceBusPublisher,
-    my_telemetry::MyTelemetryContext,
-};
 use trade_log_contracts::TradeLogSbModel;
+use yft_service_sdk::external::my_service_bus_sdk::abstractions::publisher::MyServiceBusPublisher;
 
 const ITEMS_PER_ROUNDTRIP: usize = 10;
 
 pub struct ModelToDeliver {
     pub model: TradeLogSbModel,
-    pub my_telemetry: Option<MyTelemetryContext>,
 }
 
 pub struct TradeLogInner {
@@ -34,11 +30,8 @@ impl TradeLogInner {
         self.sb_publisher.is_some()
     }
 
-    pub fn add(&mut self, item: TradeLogSbModel, my_telemetry: Option<MyTelemetryContext>) {
-        self.items.push(ModelToDeliver {
-            model: item,
-            my_telemetry,
-        });
+    pub fn add(&mut self, item: TradeLogSbModel) {
+        self.items.push(ModelToDeliver { model: item });
     }
 
     pub fn get_elements_in_queue(&self) -> usize {

@@ -1,4 +1,5 @@
-service_sdk::macros::use_my_sb_entity_protobuf_model!();
+use yft_service_sdk::external::my_service_bus_sdk::macros::my_sb_entity_protobuf_model;
+use yft_service_sdk::external::my_service_bus_sdk;
 #[derive(Clone, PartialEq, ::prost::Message)]
 #[my_sb_entity_protobuf_model(topic_id = "trade-log")]
 pub struct TradeLogSbModel {
@@ -21,7 +22,7 @@ pub struct TradeLogSbModel {
 }
 
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TradeLogSbModelDataItem{
+pub struct TradeLogSbModelDataItem {
     #[prost(string, tag = "1")]
     pub key: String,
     #[prost(string, tag = "2")]

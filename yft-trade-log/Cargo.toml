@@ -1,5 +1,5 @@
 [package]
-name = "trade-log"
+name = "yft-trade-log"
 version = "0.1.7"
 edition = "2021"
 
@@ -9,7 +9,7 @@ edition = "2021"
 trade-log-core = { path = "../trade-log-core" }
 trade-log-macros = { path = "../trade-log-macros" }
 trade-log-contracts = { path = "../trade-log-contracts" }
-service-sdk = { tag = "0.2.6", git = "https://github.com/MyJetTools/service-sdk.git" }
+yft-service-sdk = { git = "https://github.com/ITYFT/yft-service-sdk.git", tag = "0.1.0" }
 tokio = { version = "*", features = ["full"] }
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"

@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 trade-log-contracts = { path = "../trade-log-contracts" }
-service-sdk = { tag = "0.2.6", git = "https://github.com/MyJetTools/service-sdk.git", features = [
+yft-service-sdk = { tag = "0.1.0", git = "https://github.com/ITYFT/yft-service-sdk.git", features = [
     "my-service-bus",
 ] }
 

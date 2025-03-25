@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "trade-log",
+    "yft-trade-log",
     "trade-log-core",
     "trade-log-macros",
     "trade-log-contracts",
